@@ -63,8 +63,6 @@ function renderQuestion(){
     el.innerHTML = '<span class="bullet">'+arabicIndex[i]+'</span><span>'+opt+'</span>';
     if(locked[current]){
       el.classList.add('locked');
-      if(i === q.a) el.classList.add('correct');
-      if(i === answers[current] && answers[current] !== q.a) el.classList.add('wrong');
       if(i === answers[current]) el.classList.add('selected');
     } else {
       if(i === answers[current]) el.classList.add('selected');
@@ -106,35 +104,6 @@ function showResults(){
 
   document.getElementById('score-ring').style.setProperty('--pct', pct);
   document.getElementById('score-num').textContent = pct + '%';
-  document.getElementById('score-sub').textContent = 'أجبتَ بشكل صحيح عن ' + score + ' من ' + QUESTIONS.length + ' سؤالًا — الطالب: ' + student.name;
-
-  let msg = '';
-  if(pct >= 90) msg = 'ممتاز! إتقان واضح لباب النعت';
-  else if(pct >= 70) msg = 'جيد جدًا، مع مراجعة بسيطة تتقن الباب كاملًا';
-  else if(pct >= 50) msg = 'مقبول، يُنصح بمراجعة أنواع النعت وأحكام المطابقة';
-  else msg = 'يُنصح بإعادة قراءة الدرس قبل إعادة المحاولة';
-  document.getElementById('score-msg').textContent = msg;
-
-  const list = document.getElementById('review-list');
-  list.innerHTML = '';
-  QUESTIONS.forEach((q,i) => {
-    const isCorrect = answers[i] === q.a;
-    const div = document.createElement('div');
-    div.className = 'review-item';
-    const userAnsText = answers[i] === null ? 'لم تتم الإجابة' : q.opts[answers[i]];
-    div.innerHTML =
-      '<div class="review-q">'+ arabicNum[i] +'. ' + q.q + '</div>' +
-      '<div class="review-ans"><span class="tag '+(isCorrect?'good':'bad')+'">'+(isCorrect?'إجابتك صحيحة':'إجابتك خاطئة')+'</span><span>'+userAnsText+'</span></div>' +
-      (isCorrect ? '' : '<div class="review-ans"><span class="tag good">الصحيحة</span><span>'+ q.opts[q.a] +'</span></div>');
-    list.appendChild(div);
-  });
+  document.getElementById('score-sub').textContent = 'الطالب: ' + student.name + ' — الرقم الجامعي: ' + student.id;
+  document.getElementById('score-msg').textContent = 'تم تسليم الامتحان بنجاح';
 }
-
-document.getElementById('retry-btn').addEventListener('click', () => {
-  current = 0;
-  answers = new Array(QUESTIONS.length).fill(null);
-  locked = new Array(QUESTIONS.length).fill(false);
-  screenResult.classList.add('hidden');
-  screenExam.classList.remove('hidden');
-  renderQuestion();
-});
